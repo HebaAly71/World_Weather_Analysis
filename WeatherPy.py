@@ -1,3 +1,5 @@
+# To add a new cell, type '# %%'
+# To add a new markdown cell, type '# %% [markdown]'
 # %%
 # Import the random module.
 import random
@@ -5,6 +7,7 @@ import random
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+
 
 # %%
 # Create a set of random latitude and longitude combinations.
@@ -21,6 +24,8 @@ coordinates = list(lat_lngs)
 
 # %%
 from citipy import citipy
+
+
 # %%
 # Create a list for holding the cities.
 cities = []
@@ -34,16 +39,22 @@ for coordinate in coordinates:
 # Print the city count to confirm sufficient count.
 len(cities)
 
+
 # %%
 # Import the requests library.
 import requests
+from datetime import datetime
+
+
 # %%
 # Import the API key.
 from config import weather_api_key
 
+
 # %%
 # Starting URL for Weather Map API Call.
 url = "http://api.openweathermap.org/data/2.5/weather?units=Imperial&APPID=" + weather_api_key
+
 
 # %%
 # Create an empty list to hold the weather data.
@@ -97,33 +108,39 @@ for i, city in enumerate(cities):
 # If an error is experienced, skip the city.
     except:
         print("City not found. Skipping...")
-        pass
+    pass
 
 # Indicate that Data Loading is complete.
 print("-----------------------------")
 print("Data Retrieval Complete      ")
 print("-----------------------------")
 
+
 # %%
-print(len(city_data))
+len(city_data)
+
 
 # %%
 # Convert the array of dictionaries to a Pandas DataFrame.
 city_data_df = pd.DataFrame(city_data)
 city_data_df.head(10)
 
+
 # %%
 new_column_order = ["City", "Country", "Date", "Lat", "Lng", "Max Temp", "Humidity", "Cloudiness", "Wind Speed"]
 city_data_df=city_data_df[new_column_order]
 
+
 # %%
 city_data_df.head(10)
+
 
 # %%
 # Create the output file (CSV).
 output_data_file = "weather_data/cities.csv"
 # Export the City_Data into a CSV.
 city_data_df.to_csv(output_data_file, index_label="City_ID")
+
 
 # %%
 # Extract relevant fields from the DataFrame for plotting.
@@ -133,8 +150,11 @@ humidity = city_data_df["Humidity"]
 cloudiness = city_data_df["Cloudiness"]
 wind_speed = city_data_df["Wind Speed"]
 
+
 # %%
 import time
+
+
 # %%
 # Build the scatter plot for latitude vs. max temperature.
 plt.scatter(lats,
@@ -154,6 +174,7 @@ plt.savefig("weather_data/Fig1.png")
 # Show plot.
 plt.show()
 
+
 # %%
 # Build the scatter plots for latitude vs. humidity.
 plt.scatter(lats,
@@ -170,6 +191,7 @@ plt.grid(True)
 plt.savefig("weather_data/Fig2.png")
 # Show plot.
 plt.show()
+
 
 # %%
 # Build the scatter plots for latitude vs. cloudiness.
@@ -188,6 +210,7 @@ plt.savefig("weather_data/Fig3.png")
 # Show plot.
 plt.show()
 
+
 # %%
 # Build the scatter plots for latitude vs. wind speed.
 plt.scatter(lats,
@@ -205,9 +228,11 @@ plt.savefig("weather_data/Fig4.png")
 # Show plot.
 plt.show()
 
+
 # %%
 # Import linear regression from the SciPy stats module.
 from scipy.stats import linregress
+
 
 # %%
 # Create a function to create perform linear regression on the weather data
@@ -230,12 +255,16 @@ def plot_linear_regression(x_values, y_values, title, y_label, text_coordinates)
     plt.ylabel(y_label)
     plt.show()
 
+
 # %%
 # Creating a dataframe for northern and southern hemisphere
 northern_hemi_df=city_data_df.loc[(city_data_df["Lat"] >= 0)]
 southern_hemi_df = city_data_df.loc[(city_data_df["Lat"] < 0)]
+
+
 # %%
 northern_hemi_df.head()
+
 
 # %%
 # Linear regression on the Northern Hemisphere
@@ -254,6 +283,7 @@ y_values = southern_hemi_df["Max Temp"]
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Southern Hemisphere \n for Maximum Temperature', 'Max Temp',(-50,90))
 
+
 # %%
 # Linear regression on the Northern Hemisphere
 x_values = northern_hemi_df["Lat"]
@@ -262,6 +292,7 @@ y_values = northern_hemi_df["Humidity"]
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Northern Hemisphere \n for % Humidity', '% Humidity',(40,10))
 
+
 # %%
 # Linear regression on the Southern Hemisphere
 x_values = southern_hemi_df["Lat"]
@@ -269,6 +300,8 @@ y_values = southern_hemi_df["Humidity"]
 # Call the function.
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Southern Hemisphere \n for % Humidity', '% Humidity',(-50,15))
+
+
 # %%
 # Linear regression on the Southern Hemisphere
 x_values = southern_hemi_df["Lat"]
@@ -276,6 +309,8 @@ y_values = southern_hemi_df["Cloudiness"]
 # Call the function.
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Southern Hemisphere \n for % Cloudiness', '% Cloudiness',(-50,60))
+
+
 # %%
 # Linear regression on the Southern Hemisphere
 x_values = northern_hemi_df["Lat"]
@@ -283,6 +318,7 @@ y_values = northern_hemi_df["Cloudiness"]
 # Call the function.
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Norththern Hemisphere \n for % Cloudiness', '% Cloudiness',(-50,60))
+
 
 # %%
 # Linear regression on the Northern Hemisphere
@@ -292,6 +328,7 @@ y_values = northern_hemi_df["Wind Speed"]
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Northern Hemisphere \n for Wind Speed', 'Wind Speed',(40,35))
 
+
 # %%
 # Linear regression on the Southern Hemisphere
 x_values = southern_hemi_df["Lat"]
@@ -300,4 +337,11 @@ y_values = southern_hemi_df["Wind Speed"]
 plot_linear_regression(x_values, y_values,
                        'Linear Regression on the Southern Hemisphere \n for Wind Speed', 'Wind Speed',(-50,35))
 
+
 # %%
+
+
+
+# %%
+
+
