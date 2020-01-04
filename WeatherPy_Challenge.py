@@ -159,6 +159,10 @@ output_data_file = "weather_data/weatherpy_challenge.csv"
 # Export the City_Data into a CSV.
 city_data_ch_df.to_csv(output_data_file, index_label="City_ID")
 # %%
+# Find the number of citieis with snow or rain
+city_data_new = city_data_ch_df[(city_data_ch_df['Rain inches (last 3 hours)'] !=0) | (city_data_ch_df['Snow inches (last 3 hours)'] !=0)]
+city_data_new.count()
 
-# 
 
+
+# %%
