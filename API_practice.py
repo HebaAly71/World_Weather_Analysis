@@ -46,3 +46,42 @@ else:
     print(f"City weather not found.")
 
 # %%
+# Get the JSON data.
+boston_data = city_weather.json()
+
+# %%
+boston_data['sys']
+
+
+# %%
+boston_data['sys']['country']
+
+# %%
+boston_data['coord']['lat']
+
+
+# %%
+lat = boston_data["coord"]["lat"]
+lng = boston_data["coord"]["lon"]
+max_temp = boston_data["main"]["temp_max"]
+humidity = boston_data["main"]["humidity"]
+clouds = boston_data["clouds"]["all"]
+wind = boston_data["wind"]["speed"]
+print(lat, lng, max_temp, humidity, clouds, wind)
+
+# %%
+# Import the datetime module from the datetime library.
+from datetime import datetime
+# Get the date from the JSON file.
+date = boston_data["dt"]
+# Convert the UTC date to a date format with year, month, day, hours, minutes, and seconds.
+datetime.utcfromtimestamp(date)
+
+# %%
+# Import the time module.
+import time
+# Get today's date in seconds.
+today = time.time()
+today
+
+# %%
