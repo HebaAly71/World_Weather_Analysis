@@ -149,5 +149,12 @@ fig
 
 
 # %%
+# Create the output file (CSV).
+output_data_file = "weather_data/weatherpy_vacation.csv"
+# Export the City_Data into a CSV.
+hotel_df.to_csv(output_data_file, index_label="City_ID")
+
+
+# %%
 
 
