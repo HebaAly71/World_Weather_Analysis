@@ -7,6 +7,7 @@ import gmaps
 import requests
 import gmaps.datasets
 
+
 # %%
 # Import the API key.
 from config import gog_key
@@ -16,51 +17,77 @@ from config import gog_key
 # Store the CSV you saved created in part one into a DataFrame.
 vac_data_df = pd.read_csv("weather_data/weatherpy_vacation.csv")
 vac_data_df.head()
+
+
 # %%
-# Create a dataframe for Cururupu City
-cururupu_df= vac_data_df[(vac_data_df['City'] == 'Cururupu')]
-cururupu_df
+# Create a dataframe for Pacific Grove City
+pacgrove_df= vac_data_df[(vac_data_df['City'] == 'Pacific Grove')]
+pacgrove_df
+
+
 # %%
-# Create a dataframe for Baiao City
-baiao_df= vac_data_df[(vac_data_df['City'] == 'Baiao')]
-baiao_df
+# Create a dataframe for Lompoc City
+lompoc_df= vac_data_df[(vac_data_df['City'] == 'Lompoc')]
+lompoc_df
+
+
 # %%
-# Create a dataframe for Camopi City
-camopi_df= vac_data_df[(vac_data_df['City'] == 'Camopi')]
-camopi_df
+# Create a dataframe for Camarillo City
+camarillo_df= vac_data_df[(vac_data_df['City'] == 'Camarillo')]
+camarillo_df
+
+
 # %%
-# Create a dataframe for Sinnamary City
-sinnamary_df= vac_data_df[(vac_data_df['City'] == 'Sinnamary')]
-sinnamary_df
+# Create a dataframe for Pahrump City
+pahrump_df= vac_data_df[(vac_data_df['City'] == 'Pahrump')]
+pahrump_df
+
+
 # %%
 # Configure gmaps to use your Google API key.
 gmaps.configure(api_key=gog_key) 
+
+
 # %%
 #  Lat and longitude of Baiao city
-baiao_latlng= list(zip(baiao_df['Lat'],baiao_df['Lng']))[0]
-baiao_latlng
+pacgrove_latlng= list(zip(pacgrove_df['Lat'],pacgrove_df['Lng']))[0]
+pacgrove_latlng
+
+
 # %%
 #  Lat and longitude of Cururupu city
-cururupu_latlng= tuple(zip(cururupu_df['Lat'], cururupu_df['Lng']))[0]
-cururupu_latlng
+lompoc_latlng= tuple(zip(lompoc_df['Lat'], lompoc_df['Lng']))[0]
+lompoc_latlng
+
+
 # %%
 #  Lat and longitude of Camopi city
-sinnamary_latlng= tuple(zip(sinnamary_df['Lat'], sinnamary_df['Lng']))[0]
-sinnamary_latlng
+camarillo_latlng= tuple(zip(camarillo_df['Lat'], camarillo_df['Lng']))[0]
+camarillo_latlng
+
+
 # %%
 #  Lat and longitude of Camopi city
-camopi_latlng= tuple(zip(camopi_df['Lat'], camopi_df['Lng']))[0]
-camopi_latlng
+pahrump_latlng= tuple(zip(pahrump_df['Lat'], pahrump_df['Lng']))[0]
+pahrump_latlng
+
+
 # %%
 fig = gmaps.figure()
-sinnamary2cururupu_via_camopi_baiao=gmaps.directions_layer(
-        sinnamary_latlng, cururupu_latlng, waypoints=[baiao_latlng, camopi_latlng],
+pacgrove2pahrump_via_lompoc_camarillo=gmaps.directions_layer(
+        pacgrove_latlng, pahrump_latlng, waypoints=[lompoc_latlng, camarillo_latlng],
         travel_mode='DRIVING')
 #geneva2zurich_via_montreux = gmaps.directions_layer(
         #geneva, zurich, waypoints=[montreux],
         #travel_mode='Driving')
-fig.add_layer(sinnamary2cururupu_via_camopi_baiao)
+fig.add_layer(pacgrove2pahrump_via_lompoc_camarillo)
 fig
+# %%
+# Create one dataframe for the four cities
+cities_conc= [pacgrove_df,lompoc_df,camarillo_df,pahrump_df]
+cities_conc_df=pd.concat(cities_conc)
+cities_conc_df
+#result = pd.concat(frames)
 # %%
 info_box_template = """
 <dl>
@@ -75,13 +102,13 @@ info_box_template = """
 
 # %%
 # Store the DataFrame Row.
-hotel_info = [info_box_template.format(**row) for index, row in hotel_df.iterrows()]
+hotel_info = [info_box_template.format(**row) for index, row in cities_conc_df.iterrows()]
 
 
 # %%
 # Add a heatmap of temperature for the vacation spots and a pop-up marker for each city.
-locations = hotel_df[["Lat", "Lng"]]
-max_temp = hotel_df["Max Temp"]
+locations = cities_conc_df[["Lat", "Lng"]]
+max_temp = cities_conc_df["Max Temp"]
 fig = gmaps.figure(center=(30.0, 31.0), zoom_level=1.5)
 heat_layer = gmaps.heatmap_layer(locations, weights=max_temp,dissipating=False,
              max_intensity=300, point_radius=4)
@@ -91,15 +118,6 @@ fig.add_layer(marker_layer)
 
 # Call the figure to plot the data.
 fig
-
-
-# %%
-# Create the output file (CSV).
-output_data_file = "weather_data/weatherpy_vacation.csv"
-# Export the City_Data into a CSV.
-hotel_df.to_csv(output_data_file, index_label="City_ID")
-
-
 # %%
 
 
