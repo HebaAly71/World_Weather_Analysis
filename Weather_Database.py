@@ -55,9 +55,7 @@ from config import weather_api_key
 # Starting URL for Weather Map API Call.
 url = "http://api.openweathermap.org/data/2.5/weather?units=Imperial&APPID=" + weather_api_key
 
-# %%
-city_weather = requests.get(city_url).json()
-city_weather
+
 # %%
 # Create an empty list to hold the weather data.
 city_data = []
@@ -158,11 +156,13 @@ city_data_ch_df.head(10)
 output_data_file = "weather_data/weatherpy_challenge.csv"
 # Export the City_Data into a CSV.
 city_data_ch_df.to_csv(output_data_file, index_label="City_ID")
+
+
 # %%
 # Find the number of citieis with snow or rain
 city_data_new = city_data_ch_df[(city_data_ch_df['Rain inches (last 3 hours)'] !=0) | (city_data_ch_df['Snow inches (last 3 hours)'] !=0)]
 city_data_new.count()
 
 
-
-# %%
+# %% [markdown]
+# ### There are 92 cities snowing or raining
